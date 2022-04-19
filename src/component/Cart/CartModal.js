@@ -51,6 +51,7 @@ const CartModal = (props) => {
       setIsSubmitting(false);
       setSubmissionSuccess(true);
       cartCtx.resetItem();
+      cartCtx.mealsMenu();
     } catch (error) {
       setIsSubmitting(false);
       setSubmissionSuccess(false);
@@ -105,7 +106,16 @@ const CartModal = (props) => {
 
   const cartSubmittingContent = <h4>Sending Ordered Data...</h4>;
 
-  const submissionSuccessContent = <h4>Order Sent Successfully!</h4>;
+  const submissionSuccessContent = (
+    <Fragment>
+      <h4>Order Sent Successfully!</h4>
+      <div className={styles.actions}>
+        <button className={styles.button} onClick={props.onHideCartModal}>
+          Close
+        </button>
+      </div>
+    </Fragment>
+  );
 
   const submissionUnsuccessContent = (
     <h4>Something Went Wrong. Order Unsuccessful</h4>

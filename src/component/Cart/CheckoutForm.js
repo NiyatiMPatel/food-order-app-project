@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./CheckoutForm.module.css";
 import useInput from "../../hooks/user-input";
 
@@ -8,7 +8,6 @@ const isCharLengthFive = (value) => value.trim().length === 5;
 const CheckoutForm = (props) => {
   let {
     value: enteredName,
-    touch: nameTouched,
     isValid: enteredNameIsValid,
     hasError: nameInputHasError,
     valueChangeHandler: nameChangedHandler,
@@ -19,7 +18,6 @@ const CheckoutForm = (props) => {
 
   let {
     value: enteredStreet,
-    touch: streetTouched,
     isValid: enteredStreetIsValid,
     hasError: streetInputHasError,
     valueChangeHandler: streetChangedHandler,
@@ -30,7 +28,6 @@ const CheckoutForm = (props) => {
 
   let {
     value: enteredPostal,
-    touch: postalTouched,
     isValid: enteredPostalIsValid,
     hasError: postalInputHasError,
     valueChangeHandler: postalChangedHandler,
@@ -41,7 +38,6 @@ const CheckoutForm = (props) => {
 
   let {
     value: enteredCity,
-    touch: cityTouched,
     isValid: enteredCityIsValid,
     hasError: cityInputHasError,
     valueChangeHandler: cityChangedHandler,
@@ -81,8 +77,6 @@ const CheckoutForm = (props) => {
       postal: enteredPostal,
       city: enteredCity,
     });
-
-    console.log("submitted");
 
     resetNameInput();
     resetStreetInput();

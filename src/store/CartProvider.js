@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, useState, useEffect } from "react";
 import CartContext from "./cart-context";
 
 const defaultCartState = {
@@ -57,6 +57,7 @@ const cartReducer = (state, action) => {
   if (action.type === "RESET") {
     return defaultCartState;
   }
+
   return defaultCartState;
 };
 
@@ -78,12 +79,60 @@ const CartProvider = (props) => {
     dispatchCartAction({ type: "RESET" });
   };
 
+  const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchingError, setFetchingError] = useState();
+
+  const mealsMenu = () => {
+    // useEffect(() => {
+    setIsLoading(true);
+    setFetchingError(null);
+    const fetchMeals = async () => {
+      const response = await fetch(
+        "https://react-food-order-app-9056c-default-rtdb.asia-southeast1.firebasedatabase.app/meals.json"
+      );
+
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      const responseMealsData = await response.json();
+
+      const listOfMeals = [];
+      for (const key in responseMealsData) {
+        listOfMeals.push({
+          id: key,
+          name: responseMealsData[key].name,
+          description: responseMealsData[key].description,
+          price: responseMealsData[key].price,
+        });
+      }
+      setMeals(listOfMeals);
+      setIsLoading(false);
+    };
+
+    const httpFetchError = async () => {
+      try {
+        await fetchMeals();
+      } catch (error) {
+        setIsLoading(false);
+        setFetchingError(error.message);
+      }
+    };
+    httpFetchError();
+    // }, []);
+  };
+
   const cartContext = {
     items: cartState.items,
     totalAmount: cartState.totalAmount,
     addItem: addItemToCartHandler,
     removeItem: removeItemFromCartHandler,
     resetItem: removeItem,
+    mealsMenu: mealsMenu,
+    meals: meals,
+    isLoading: isLoading,
+    fetchingError: fetchingError,
   };
   return (
     <CartContext.Provider value={cartContext}>
